@@ -1,385 +1,160 @@
-" ~/.config/nvim/init.vim
+""" Optixal's Neovim Init.vim
 
-" set plugin base dir
-let s:editor_root=expand("~/.nvim")
+""" Vim-Plug
+call plug#begin()
 
-" ========================================================== "
-"                     VIM SETTINGS                           "
-" ========================================================== "
-"
-set relativenumber  " Relative line numbers rock
+" Aesthetics - Main
+Plug 'dracula/vim', { 'commit': '147f389f4275cec4ef43ebc25e2011c57b45cc00' }
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'ryanoasis/vim-devicons'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
+Plug 'junegunn/seoul256.vim'
+Plug 'junegunn/vim-journal'
+Plug 'junegunn/rainbow_parentheses.vim'
+Plug 'nightsense/forgotten'
+Plug 'zaki/zazen'
 
-set ruler           " Show the line and column number of the cursor position,
-                    " separated by a comma.
+" Aethetics - Additional
+Plug 'nightsense/nemo'
+Plug 'yuttie/hydrangea-vim'
+Plug 'chriskempson/tomorrow-theme', { 'rtp': 'vim' }
+Plug 'rhysd/vim-color-spring-night'
 
-set shiftwidth=4    " Number of spaces to use for each step of (auto)indent.
-
-set expandtab       " Use the appropriate number of spaces to insert a <Tab>.
-                    " Spaces are used in indents with the '>' and '<' commands
-                    " and when 'autoindent' is on. To insert a real tab when
-                    " 'expandtab' is on, use CTRL-V <Tab>.
-
-set smarttab        " When on, a <Tab> in front of a line inserts blanks
-                    " according to 'shiftwidth'. 'tabstop' is used in other
-                    " places. A <BS> will delete a 'shiftwidth' worth of space
-                    " at the start of the line.
-
-set incsearch       " While typing a search command, show immediately where the
-                    " so far typed pattern matches.
-
-set autoindent      " Copy indent from current line when starting a new line
-
-" Colors.  TODO: Auto detect term bg color from Xresources?
-set termguicolors
-set background=light
-
-" auto detect filetype
-filetype plugin on
-set omnifunc=syntaxcomplete#Complete
-
-" allow easy insertion of one character with spacebar
-" source: http://vim.wikia.com/wiki/Insert_a_single_character
-nnoremap <Space> :exec "normal i".nr2char(getchar())."\e"<CR>
-
-" normal esc from terminal window
-tnoremap <Esc> <C-\><C-n>
-
-" faster buffer lookup & switching with <C-e># or <C-e><buff_name>
-" and cycle buffers with <C-h> and <C-l>
-nnoremap <C-e> :set nomore <Bar> :ls <Bar> :set more <CR>:b<Space>
-nnoremap <C-h> :bprevious<CR>
-nnoremap <C-l> :bnext<CR>
-
-" fast find/replace word under cursor
-nnoremap <Leader>s :%s/\<<C-r><C-w>\>//g<Left><Left>
-
-" fast escape
-inoremap jj <ESC>
-imap jw <ESC>
-imap jk <ESC>
-
-" syntax highlight
-syntax on
-
-" remap arrow keys to window resize
-if bufwinnr(1)
-    map <Up> <C-W>2-
-    map <Down> <C-W>2+
-    map <Left> <C-W>2<
-    map <Right> <C-W>2>
-endif
-
-" remap ctrl+hkjl to jump windows in normal mode
-if bufwinnr(1)
-    nmap <C-h> <C-W>h
-    nmap <C-j> <C-W>j
-    nmap <C-k> <C-W>k
-    nmap <C-l> <C-W>l
-endif
-
-" quick change from horizontal to vert split
-map <leader>th <C-w>t<C-w>H
-map <leader>tk <C-w>t<C-w>K
-
-" default splits to bottom right
-set splitbelow splitright
-
-" incremental command live feedback
-set inccommand=nosplit
-
-" netrw tree style by default
-let g:netrw_liststyle=3
-let g:netrw_winsize=20
-
-" python provider
-" let g:python3_host_prog=system('which python3')
-" let g:python2_host_prog=system('which python2')
-" let g:python3_host_prog='/home/wll/miniconda3/bin/python'
-" let g:python2_host_prog='/home/wll/miniconda2/bin/python'
-
-" ========================================================== "
-"                    PLUGIN SETTINGS                         "
-" ========================================================== "
-
-if empty(glob('~/.config/nvim/autoload/plug.vim'))
-    silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
-                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    autocmd VimEnter * PlugInstall --sync | source ~/.config/nvim/init.vim
-endif
-
-call plug#begin('~/.nvim/plugged')
-" A S T H E T I C S
-Plug 'iCyMind/NeoSolarized'
-Plug 'https://github.com/vim-airline/vim-airline.git'
-Plug 'https://github.com/vim-airline/vim-airline-themes.git'
-" common plugins
-Plug 'unblevable/quick-scope'
-Plug 'yssl/QFEnter'
-Plug 'https://github.com/scrooloose/nerdtree.git'
-Plug 'https://github.com/wgurecky/vimSum.git', { 'do': ':UpdateRemotePlugins' }
-Plug 'https://github.com/junegunn/vim-easy-align.git'
-Plug 'https://github.com/terryma/vim-multiple-cursors.git'
-Plug 'https://github.com/SirVer/ultisnips.git'
-Plug 'https://github.com/honza/vim-snippets.git'
-Plug 'https://github.com/majutsushi/tagbar.git'
-Plug 'https://github.com/tpope/vim-fugitive.git'
-Plug 'https://github.com/tpope/vim-surround.git'
-Plug 'https://github.com/tpope/vim-repeat.git'
-" find/search
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+" Functionalities
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-surround'
+Plug 'majutsushi/tagbar'
+Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdcommenter'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'deoplete-plugins/deoplete-jedi'
+Plug 'ervandew/supertab'
+Plug 'jiangmiao/auto-pairs'
+Plug 'junegunn/vim-easy-align'
+Plug 'alvan/vim-closetag'
+Plug 'tpope/vim-abolish'
+Plug 'Yggdroot/indentLine'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'mileszs/ack.vim'
-Plug 'mhinz/vim-grepper'
-" dev tools
-Plug 'https://github.com/tpope/vim-dispatch.git', { 'for': ['cpp', 'c', 'fortran'] }
-Plug 'https://github.com/w0rp/ale.git', {'for': ['python', 'cpp', 'c', 'fortran', 'markdown', 'tex']}
-Plug 'tell-k/vim-autopep8', {'for': 'python' }
-Plug 'lervag/vimtex', {'for': 'tex'}
-" code completion
-Plug 'neovim/nvim-lsp'
-Plug 'haorenW1025/completion-nvim'
-Plug 'haorenW1025/diagnostic-nvim'
+Plug 'sheerun/vim-polyglot'
+Plug 'chrisbra/Colorizer'
+Plug 'KabbAmine/vCoolor.vim'
+Plug 'heavenshell/vim-pydocstring', { 'do': 'make install' }
+Plug 'vim-scripts/loremipsum'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'metakirby5/codi.vim'
+Plug 'dkarter/bullets.vim'
+
+" syntax check 
+Plug 'dense-analysis/ale'
+" Entertainment
+"Plug 'ryanss/vim-hackernews'
+
 call plug#end()
 
-" Vimtex settings
-" Note; <leader>ll builds and <leader>le shows compile errors
-" Note; install xdotool package for live previews in zathura
-let g:remoteSession = ($SSH_TTY != "")
-if  g:remoteSession
-    " Do not preview pdf over ssh connection.
-    " Use sshfs+zathura to view remote pdf
-    let g:vimtex_view_enabled=0
-endif
-" let g:vimtex_view_method='general'
-let g:vimtex_view_method='zathura'
+""" Python3 VirtualEnv
+let g:python3_host_prog = expand('~/.config/nvim/env/bin/python')
 
-" Nerdtree settings
-" launch nerdtree on entry if no file is specified
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-set autochdir                " automatically change directory
-let NERDTreeChDirMode=2
-let NERDTreeIgnore = ['\.pyc$','\.png$']
-nmap <C-o> :NERDTreeToggle<CR>
+""" Coloring
+syntax on
+color dracula
+highlight Pmenu guibg=white guifg=black gui=bold
+highlight Comment gui=bold
+highlight Normal gui=none
+highlight NonText guibg=none
 
-" Easy align settings
+" Opaque Background (Comment out to use terminal's profile)
+set termguicolors
+
+" Transparent Background (For i3 and compton)
+highlight Normal guibg=NONE ctermbg=NONE
+highlight LineNr guibg=NONE ctermbg=NONE
+
+""" Other Configurations
+filetype plugin indent on
+set tabstop=4 softtabstop=4 shiftwidth=4 expandtab smarttab autoindent
+set incsearch ignorecase smartcase hlsearch
+set ruler laststatus=2 showcmd showmode
+set list listchars=trail:»,tab:»-
+set fillchars+=vert:\ 
+set wrap breakindent
+set encoding=utf-8
+set number
+set title
+
+""" Plugin Configurations
+" ale
+let g:ale_sign_column_always = 1
+let g:ale_linters = {
+    \ 'python': ['pylint'],
+    \ 'vim': ['vint'],
+    \ 'cpp': ['clang'],
+    \ 'c': ['clang']
+\}
+let g:ale_statusline_format = ['E:%d', 'W:%d', 'ok']
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_lint_on_enter = 1
+let g:ale_set_signs = 1
+let g:ale_sign_error = '◈'
+let g:ale_sign_warning = '♧'
+
+" NERDTree
+let NERDTreeShowHidden=1
+let g:NERDTreeDirArrowExpandable = '↠'
+let g:NERDTreeDirArrowCollapsible = '↡'
+
+" Airline
+let g:airline_powerline_fonts = 1
+let g:airline_section_z = ' %{strftime("%-I:%M %p")}'
+let g:airline_section_warning = ''
+"let g:airline#extensions#tabline#enabled = 1
+
+" Neovim :Terminal
+tmap <Esc> <C-\><C-n>
+tmap <C-w> <Esc><C-w>
+"tmap <C-d> <Esc>:q<CR>
+autocmd BufWinEnter,WinEnter term://* startinsert
+autocmd BufLeave term://* stopinsert
+
+" Deoplete
+let g:deoplete#enable_at_startup = 1
+" Disable documentation window
+set completeopt-=preview
+
+" vim-pydocstring
+let g:pydocstring_doq_path = '~/.config/nvim/env/bin/doq'
+
+" Supertab
+let g:SuperTabDefaultCompletionType = "<C-n>"
+
+" Ultisnips
+let g:UltiSnipsExpandTrigger="<C-Space>"
+let g:UltiSnipsJumpForwardTrigger="<Tab>"
+let g:UltiSnipsJumpBackwardTrigger="<C-x>"
+
+" EasyAlign
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
-" QFEnter settings
-let g:qfenter_keymap = {}
-let g:qfenter_keymap.hopen = ['<Leader><Space>', '<C-x>']
-let g:qfenter_keymap.vopen = ['<Leader><CR>', '<C-v>']
+" indentLine
+let g:indentLine_char = '▏'
+let g:indentLine_color_gui = '#363949'
 
-" fzf.vim settings
-nnoremap <C-b> :Buffers<CR>
-nnoremap <C-p> :GFiles<CR>
-nnoremap <C-g>g :Ag<CR>
+" TagBar
+let g:tagbar_width = 30
+let g:tagbar_iconchars = ['↠', '↡']
 
-" Airline settings
-let g:airline_theme='solarized'
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#fnamemod = ':t'
-
-" quick-scope
-let g:qs_highlight_on_keys = ['f', 'F']
-
-" nvim-lsp
-lua << EOF
--- python language server settings
-require'nvim_lsp'.pyls.setup{}
--- fortran language server settings
-require'nvim_lsp'.fortls.setup{}
--- cpp language server settings
-require'nvim_lsp'.clangd.setup{}
--- disable lsp diagnostics
-vim.lsp.callbacks["textDocument/publishDiagnostics"] = function() end
-EOF
-autocmd BufEnter * lua require'completion'.on_attach()
-" autocmd BufEnter * lua require'diagnostic'.on_attach()
-
-" nvim-lsp mappings
-nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
-nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
-nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
-nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
-nnoremap <silent> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
-nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
-nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
-nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
-
-" disable virtual diagnostic text
-" let g:diagnostic_enable_virtual_text = 0
-" let g:diagnostic_show_sign = 1
-
-" completion settings
-set completeopt=menuone,noinsert,noselect
-set shortmess+=c
-let g:completion_enable_auto_popup = 1
-let g:completion_enable_snippet = 'UltiSnips'
-let g:completion_enable_auto_hover = 0
-let g:completion_enable_auto_signature = 0
-let g:completion_max_items = 10
-let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
-
-" completion chain
-let g:completion_chain_complete_list = {
-    \ 'default': [
-    \    {'mode': '<c-p>'},
-    \    {'mode': '<c-n>'}
-    \],
-    \ 'python': [
-    \    {'complete_items': ['lsp', 'snippet']},
-    \    {'mode': '<c-p>'},
-    \    {'mode': '<c-n>'}
-    \],
-    \ 'cpp': [
-    \    {'complete_items': ['lsp', 'snippet']},
-    \    {'mode': '<c-p>'},
-    \    {'mode': '<c-n>'}
-    \],
-    \ 'c': [
-    \    {'complete_items': ['lsp', 'snippet']},
-    \    {'mode': '<c-p>'},
-    \    {'mode': '<c-n>'}
-    \],
-    \ 'fortran': [
-    \    {'complete_items': ['lsp', 'snippet']},
-    \    {'mode': '<c-p>'},
-    \    {'mode': '<c-n>'}
-    \]
-\}
-
-" tab for completion
-function! s:check_back_space() abort
-let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
-
-inoremap <silent><expr> <TAB>
-  \ pumvisible() ? "\<C-n>" :
-  \ <SID>check_back_space() ? "\<TAB>" :
-  \ completion#trigger_completion()
-
-" ale syntax checker settings for filetypes which do not have a lang server
-" to check which linters are active run: :ALEinfo
-let g:ale_linters = {
-    \ 'python': ['pylint'],
-    \ 'cpp': ['clangd'],
-    \ 'c': ['clangd'],
-    \ 'fortran': ['gfortran'],
-    \ 'tex': ['proselint', 'write-good'],
-    \ 'markdown': ['proselint', 'write-good'],
-    \ }
-let g:ale_lint_on_save = 1
-
-" vim-dispatch settings
-" Run :Make! to launch background async project build.
-" Results are available via :Copen
-" Ensure makeprg is set properly before running
-
-" For project wide search/replace
-" Run :Ack {pattern} [{dir}]
-" :cdo s/foo/bar/gc | update
-if !executable('ack')
-    let g:ackprg = '~/.config/nvim/bin/ack'
-endif
-
-" ultisnips settings (auto integration with deoplete)
-let g:UltiSnipsExpandTrigger="<C-j>"
-let g:UltiSnipsJumpForwardTrigger='<c-j>'
-let g:UltiSnipsJumpBackwardTrigger="<c-k>"
-
-" automatically set project base directory ack search on `:ag `
-" requires the projec to have a `.git` file in the base dir
-cnoreabbrev ag Gcd <bar> Ack!
-
-" vim-grepper settings
-let g:grepper = {}
-let g:grepper.tools = ['git', 'ack']
-let g:grepper.git = { 'grepprg': 'git grep -nI $* -- `git rev-parse --show-toplevel`' }
-" Project wide search with <leader>*
-nnoremap <leader>* :Grepper -tool git -cword -noprompt<cr>
-" Project wide search with :vg <cr>
-cnoreabbrev vg Grepper -tool git<cr>
-
-" tagbar
-nmap <F8> :TagbarToggle<CR>
-
-" ========================================================== "
-"                    EXTRA FUNCTIONS                         "
-" ========================================================== "
-
-" comment blocks of code
-autocmd FileType c,cpp,java,scala let b:comment_leader = '// '
-autocmd FileType sh,ruby,python   let b:comment_leader = '# '
-autocmd FileType conf,fstab       let b:comment_leader = '# '
-autocmd FileType tex              let b:comment_leader = '% '
-autocmd FileType vim              let b:comment_leader = '" '
-autocmd FileType fortran          let b:comment_leader = '! '
-noremap <silent> <leader>cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
-noremap <silent> <leader>cu :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
-
-" show extra whitespace
-highlight ExtraWhitespace ctermbg=red guibg=red
-autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
-match ExtraWhitespace /\s\+$/
-autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
-autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-autocmd InsertLeave * match ExtraWhitespace /\s\+$/
-autocmd BufWinLeave * call clearmatches()
-
-" remove trailing whitespace from current line
-function! DelWhitespaceLine()
-    :.,s/\s\+$//g
-endfunction
-" retain current cursor position
-command! UnfuckLine execute "normal! ma" | execute DelWhitespaceLine() | execute "normal! `a"
-nnoremap <leader>e :UnfuckLine<CR>
-
-" remove all trailing whitspace and replace tabs with spaces
-function! DelWhitespace()
-    execute ":retab"
-    :%s/\s\+$//g
-endfunction
-command! Unfuck execute DelWhitespace()
-
-" automatically set makeprg (required for large c++ and c projects)
-function! g:BuildInSubDir(buildsubdir)
-    " Sets makeprg base dir
-    let toplevelpath = FindTopLevelProjectDir()
-    let builddir = toplevelpath . a:buildsubdir
-    echo builddir
-    let makeprgcmd = 'make -C ' . builddir
-    if builddir !=? "//build"
-        let &makeprg=makeprgcmd
-    endif
-endfunction
-
-function! FindTopLevelProjectDir()
-    " Searches for a .git directory upward till root.
-    let isittopdir = finddir('.git')
-    if isittopdir ==? ".git"
-        return getcwd()
-    endif
-    let gitdir = finddir('.git', ';')
-    let gitdirsplit = split(gitdir, '/')
-    let toplevelpath = '/' . join(gitdirsplit[:-2],'/')
-    return toplevelpath
-endfunction
-
-" Colorscheme
-colorscheme NeoSolarized
-let g:solarized_termtrans=1
-hi Normal guibg=NONE ctermbg=NONE
-
-" Do not enable unless you want makeprg auto-set for all filetypes
-" Set in ftplugin files each desired filetype
-autocmd BufNewFile,BufRead * call g:BuildInSubDir("/build")
-
-" customize fzf colors to match your color scheme
+" fzf-vim
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-s': 'split',
+  \ 'ctrl-v': 'vsplit' }
 let g:fzf_colors =
 \ { 'fg':      ['fg', 'Normal'],
   \ 'bg':      ['bg', 'Normal'],
@@ -387,10 +162,97 @@ let g:fzf_colors =
   \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
   \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
   \ 'hl+':     ['fg', 'Statement'],
-  \ 'info':    ['fg', 'PreProc'],
+  \ 'info':    ['fg', 'Type'],
   \ 'border':  ['fg', 'Ignore'],
-  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'prompt':  ['fg', 'Character'],
   \ 'pointer': ['fg', 'Exception'],
   \ 'marker':  ['fg', 'Keyword'],
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
+
+""" Filetype-Specific Configurations
+
+" HTML, XML, Jinja
+autocmd FileType html setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType css setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType xml setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType htmldjango inoremap {{ {{  }}<left><left><left>
+autocmd FileType htmldjango inoremap {% {%  %}<left><left><left>
+autocmd FileType htmldjango inoremap {# {#  #}<left><left><left>
+
+" Markdown and Journal
+autocmd FileType markdown setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType journal setlocal shiftwidth=2 tabstop=2 softtabstop=2
+
+""" Custom Functions
+
+" Trim Whitespaces
+function! TrimWhitespace()
+    let l:save = winsaveview()
+    %s/\\\@<!\s\+$//e
+    call winrestview(l:save)
+endfunction
+
+" Dracula Mode (Dark)
+function! ColorDracula()
+    let g:airline_theme=''
+    color dracula
+    IndentLinesEnable
+endfunction
+
+" Seoul256 Mode (Dark & Light)
+function! ColorSeoul256()
+    let g:airline_theme='silver'
+    color seoul256
+    IndentLinesDisable
+endfunction
+
+" Forgotten Mode (Light)
+function! ColorForgotten()
+    " Light airline themes: tomorrow, silver, alduin
+    " Light colors: forgotten-light, nemo-light
+    let g:airline_theme='tomorrow'
+    color forgotten-light
+    IndentLinesDisable
+endfunction
+
+" Zazen Mode (Black & White)
+function! ColorZazen()
+    let g:airline_theme='badcat'
+    color zazen
+    IndentLinesEnable
+endfunction
+
+""" Custom Mappings
+
+let mapleader=","
+nmap <leader>q :NERDTreeToggle<CR>
+nmap \ <leader>q
+nmap <leader>w :TagbarToggle<CR>
+nmap <leader>ee :Colors<CR>
+nmap <leader>ea :AirlineTheme 
+nmap <leader>e1 :call ColorDracula()<CR>
+nmap <leader>e2 :call ColorSeoul256()<CR>
+nmap <leader>e3 :call ColorForgotten()<CR>
+nmap <leader>e4 :call ColorZazen()<CR>
+nmap <leader>r :so ~/.config/nvim/init.vim<CR>
+nmap <leader>t :call TrimWhitespace()<CR>
+xmap <leader>a gaip*
+nmap <leader>a gaip*
+nmap <leader>s <C-w>s<C-w>j:terminal<CR>
+nmap <leader>vs <C-w>v<C-w>l:terminal<CR>
+nmap <leader>d <Plug>(pydocstring)
+nmap <leader>f :Files<CR>
+nmap <leader>g :Goyo<CR>
+nmap <leader>h :RainbowParentheses!!<CR>
+nmap <leader>j :set filetype=journal<CR>
+nmap <leader>k :ColorToggle<CR>
+nmap <leader>l :Limelight!!<CR>
+xmap <leader>l :Limelight!!<CR>
+autocmd FileType python nmap <leader>x :0,$!~/.config/nvim/env/bin/python -m yapf<CR>
+"nmap <leader>n :HackerNews best<CR>J
+nmap <silent> <leader><leader> :noh<CR>
+nmap <Tab> :bnext<CR>
+nmap <S-Tab> :bprevious<CR>
+
